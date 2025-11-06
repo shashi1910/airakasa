@@ -282,37 +282,3 @@ The checkout process uses PostgreSQL transactions with row-level locking (`SELEC
 3. Only successful checkouts deduct stock
 4. Concurrent checkouts are handled correctly (last-write-wins for stock)
 
-## Nice-to-Haves if Given More Time
-
-- **Payments**: Integrate Stripe/Razorpay for actual payment processing
-- **Addresses**: User address management for delivery
-- **Coupons**: Discount codes and promotional offers
-- **Inventory Reservations**: Reserve stock for X minutes during checkout
-- **Admin Dashboard**: Full admin UI for managing items, orders, inventory
-- **Pagination & Caching**: Server-side pagination, Redis caching for catalog
-- **E2E Tests**: Playwright/Cypress tests for critical flows
-- **Accessibility**: ARIA labels, keyboard navigation, screen reader support
-- **Real-time Updates**: WebSocket for order status updates
-- **Email Notifications**: Order confirmation and delivery emails
-- **Image Upload**: Allow admins to upload item images
-- **Reviews & Ratings**: Customer feedback system
-
-## Quality Bar
-
-- ✅ Lint passes (ESLint/Prettier configured)
-- ✅ TypeScript strict mode enabled
-- ✅ Clear error messages in UI
-- ✅ Loading and empty states handled
-- ✅ No silent failures
-- ✅ Input validation on both client and server
-- ✅ Rate limiting on sensitive endpoints
-- ✅ Password hashing with bcrypt
-- ✅ JWT authentication with httpOnly cookies
-
-## License
-
-MIT
-
-## Support
-
-For issues or questions, please open an issue on the repository.
