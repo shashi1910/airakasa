@@ -7,7 +7,7 @@
     "dev:all": "concurrently \"npm run dev --prefix app/backend\" \"npm run dev --prefix app/frontend\"",
     "install:all": "npm install && npm install --prefix app/backend && npm install --prefix app/frontend",
     "build": "npm run build --prefix app/backend && npm run build --prefix app/frontend",
-    "vercel-build": "cd app/backend && npm run prisma:generate && cd ../frontend && npm run build"
+    "vercel-build": "cd app/backend && npm install && npm run prisma:generate && cd ../frontend && npm install && npm run build"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
