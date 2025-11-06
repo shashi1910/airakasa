@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { authApi, User } from '../api/auth';
@@ -18,17 +18,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ['auth', 'me'],
     queryFn: () => authApi.getMe(),
     retry: false,
-    onSuccess: (data) => {
-      setUser(data.user);
-    },
-    onError: () => {
-      setUser(null);
-    },
   });
+
+  useEffect(() => {
+    if (data) {
+      setUser(data.user);
+    } else if (isError) {
+      setUser(null);
+    }
+  }, [data, isError]);
 
   const loginMutation = useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>

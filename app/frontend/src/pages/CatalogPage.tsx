@@ -71,7 +71,7 @@ const CatalogPage = () => {
         }, 500);
       } catch (error) {
         // Log error but don't break the flow
-        if (process.env.NODE_ENV === 'development') {
+        if (import.meta.env.DEV) {
           console.error('Error in add to cart success handler:', error);
         }
       }
@@ -86,7 +86,7 @@ const CatalogPage = () => {
     return `₹${(paise / 100).toFixed(2)}`;
   };
 
-  const handleAddToCart = (itemId: string, itemName: string) => {
+  const handleAddToCart = (itemId: string, _itemName: string) => {
     addToCartMutation.mutate({ itemId, quantity: 1 });
   };
 

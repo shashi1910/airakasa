@@ -36,7 +36,7 @@ const CartPage = () => {
       queryClient.invalidateQueries({ queryKey: ['items'] }); // Refresh items to update stock
       showToast('Item removed from cart', 'info');
     },
-    onError: (error: any) => {
+    onError: (_error: any) => {
       showToast('Failed to remove item', 'error');
     },
   });

@@ -1,9 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { ordersApi } from '../api/orders';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const OrdersPage = () => {
   const [selectedOrder, setSelectedOrder] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const { data: orders, isLoading } = useQuery({
     queryKey: ['orders'],

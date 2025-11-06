@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './state/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
