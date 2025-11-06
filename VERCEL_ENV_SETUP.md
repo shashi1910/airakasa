@@ -8,7 +8,7 @@ Go to your Vercel project → **Settings** → **Environment Variables** and add
 
 ### 1. DATABASE_URL
 ```
-postgresql://neondb_owner:npg_2cFx3oIjBSUH@ep-floral-lake-a18os2pi-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+postgresql://neondb_owner:npg_ofgQH0E9uMZJ@ep-autumn-cake-a4aizha4-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require
 ```
 
 **Environment**: Select all (Production, Preview, Development)
@@ -105,7 +105,7 @@ After seeding, you can login with:
 4. **Test connection locally**:
    ```bash
    cd app/backend
-   export DATABASE_URL='postgresql://neondb_owner:npg_2cFx3oIjBSUH@ep-floral-lake-a18os2pi-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require'
+   export DATABASE_URL='postgresql://neondb_owner:npg_ofgQH0E9uMZJ@ep-autumn-cake-a4aizha4-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require'
    npx prisma studio
    ```
    This opens Prisma Studio at `http://localhost:5555` to verify the connection.
