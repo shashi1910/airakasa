@@ -24,11 +24,6 @@ xXFkxZW4ZWHMzPRJKA74DSE+6VwvwTrfbrX9RWWnPzI=
 openssl rand -base64 32
 ```
 
-**To generate a new one:**
-```bash
-openssl rand -base64 32
-```
-
 **Environment**: Select all (Production, Preview, Development)
 
 ### 3. ADMIN_EMAIL
