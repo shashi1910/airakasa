@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+build/
+app/backend/dist/
+app/frontend/dist/
+app/frontend/.vite/
+
+# Compiled TypeScript files (but keep config files)
+app/backend/dist/**/*.js
+app/backend/dist/**/*.js.map
+app/backend/dist/**/*.d.ts
+app/backend/dist/**/*.d.ts.map
+app/backend/prisma/*.js
+app/backend/prisma/*.js.map
+app/backend/prisma/*.d.ts
+app/backend/prisma/*.d.ts.map
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Database
+app/backend/prisma/migrations/
+*.db
+*.sqlite
+*.sqlite3
+
+# Testing
+coverage/
+.nyc_output/
