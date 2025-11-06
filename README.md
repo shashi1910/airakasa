@@ -194,7 +194,17 @@ See `docs/api_collection.json` for Postman/Insomnia collection.
 
 ## Deployment Notes
 
-### Frontend (Vercel)
+### Deploy to Vercel (Full Stack)
+
+For deploying both frontend and backend together on Vercel, see [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md) for detailed instructions.
+
+**Quick Start:**
+1. Set up a PostgreSQL database (Neon, Supabase, or Railway)
+2. Import your repository to Vercel
+3. Configure environment variables (see VERCEL_DEPLOYMENT.md)
+4. Deploy!
+
+### Frontend (Vercel) - Separate Deployment
 
 1. Connect GitHub repository to Vercel
 2. Set build command: `cd app/frontend && npm run build`

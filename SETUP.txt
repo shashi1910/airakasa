@@ -1,0 +1,528 @@
+================================================================================
+                    FOODMATE - PROJECT SETUP GUIDE
+================================================================================
+
+This guide will walk you through setting up the FoodMate food ordering platform
+from scratch. Follow these steps in order.
+
+================================================================================
+                            PREREQUISITES
+================================================================================
+
+Before you begin, ensure you have the following installed:
+
+1. Node.js (version 20 or higher)
+   - Download from: https://nodejs.org/
+   - Verify installation: node --version
+
+2. PostgreSQL (version 15 or higher) OR Docker
+   - PostgreSQL: https://www.postgresql.org/download/
+   - Docker: https://www.docker.com/get-started
+   - Verify PostgreSQL: psql --version
+   - Verify Docker: docker --version
+
+3. npm (comes with Node.js)
+   - Verify: npm --version
+
+4. Git (optional, for cloning)
+   - Download from: https://git-scm.com/downloads
+
+================================================================================
+                        INSTALLATION STEPS
+================================================================================
+
+STEP 1: INSTALL DEPENDENCIES
+-----------------------------
+
+From the project root directory, run:
+
+    npm run install:all
+
+This will install dependencies for:
+- Root package (concurrently for running both servers)
+- Backend (Express, Prisma, etc.)
+- Frontend (React, Vite, Tailwind, etc.)
+
+Alternative (manual installation):
+    npm install
+    cd app/backend && npm install
+    cd ../frontend && npm install
+    cd ../..
+
+
+STEP 2: SETUP DATABASE
+----------------------
+
+Option A: Using Docker Compose (Recommended for beginners)
+----------------------------------------------------------
+
+1. Start PostgreSQL using Docker Compose:
+   
+   docker-compose up -d postgres
+
+   This will start PostgreSQL on port 5432 with:
+   - User: foodmate_user
+   - Password: foodmate_password
+   - Database: foodmate
+
+2. Wait a few seconds for PostgreSQL to be ready.
+
+Option B: Using Local PostgreSQL
+---------------------------------
+
+1. Create a new PostgreSQL database:
+   
+   createdb foodmate
+
+   Or using psql:
+   psql -U postgres
+   CREATE DATABASE foodmate;
+   \q
+
+2. Note your database connection details:
+   - Host: localhost
+   - Port: 5432
+   - Database: foodmate
+   - User: your_postgres_user
+   - Password: your_postgres_password
+
+
+STEP 3: CONFIGURE ENVIRONMENT VARIABLES
+----------------------------------------
+
+Backend Configuration (app/backend/.env)
+-----------------------------------------
+
+Create a file named .env in app/backend/ directory:
+
+    DATABASE_URL="postgresql://foodmate_user:foodmate_password@localhost:5432/foodmate?schema=public"
+    JWT_SECRET="your-super-secret-jwt-key-change-this-in-production-min-32-chars"
+    ADMIN_EMAIL="admin@foodmate.com"
+    CORS_ORIGIN="http://localhost:5173"
+    NODE_ENV="development"
+    PORT=3000
+
+IMPORTANT NOTES:
+- Replace DATABASE_URL with your actual PostgreSQL connection string if not using Docker
+- Change JWT_SECRET to a strong random string (at least 32 characters)
+- Keep CORS_ORIGIN as http://localhost:5173 for local development
+
+
+Frontend Configuration (app/frontend/.env)
+-------------------------------------------
+
+Create a file named .env in app/frontend/ directory:
+
+    VITE_API_URL=http://localhost:3000
+
+This tells the frontend where to find the backend API.
+
+
+STEP 4: SETUP DATABASE SCHEMA
+------------------------------
+
+Navigate to the backend directory:
+
+    cd app/backend
+
+1. Generate Prisma Client:
+   
+   npm run prisma:generate
+
+   This creates the Prisma client based on your schema.
+
+2. Run Database Migrations:
+   
+   npm run prisma:migrate
+
+   This creates all the database tables (User, Category, Item, Cart, Order, etc.)
+
+3. Seed the Database:
+   
+   npm run prisma:seed
+
+   This will:
+   - Create categories (Fruit, Vegetable, Non-veg, Breads)
+   - Fetch real food items from TheMealDB API (free, no API key needed)
+   - Create a demo user account
+   - Generate random prices and stock for items
+
+   Expected output:
+   - "✅ Seeding completed!"
+   - "Created: X items"
+   - "Demo user: demo@foodmate.com / demo123"
+
+4. (Optional) Open Prisma Studio to view database:
+   
+   npm run prisma:studio
+
+   This opens a web interface at http://localhost:5555 to browse your database.
+
+
+STEP 5: START THE APPLICATION
+------------------------------
+
+Option A: Run Both Servers Together (Recommended)
+--------------------------------------------------
+
+From the project root directory:
+
+    npm run dev:all
+
+This starts both backend and frontend servers simultaneously.
+
+Option B: Run Servers Separately
+---------------------------------
+
+Terminal 1 - Backend:
+    cd app/backend
+    npm run dev
+
+Terminal 2 - Frontend:
+    cd app/frontend
+    npm run dev
+
+
+STEP 6: ACCESS THE APPLICATION
+-------------------------------
+
+Once both servers are running, open your browser:
+
+Frontend Application:
+    http://localhost:5173
+
+Backend API:
+    http://localhost:3000
+    Health Check: http://localhost:3000/health
+
+Demo Account:
+    Email: demo@foodmate.com
+    Password: demo123
+
+
+================================================================================
+                        DOCKER SETUP (ALTERNATIVE)
+================================================================================
+
+If you prefer to run everything with Docker:
+
+1. Start all services:
+   
+   docker-compose up
+
+   This starts:
+   - PostgreSQL database
+   - Backend API server
+   - Frontend development server
+
+2. In a separate terminal, run database migrations:
+   
+   docker-compose exec backend npm run prisma:generate
+   docker-compose exec backend npm run prisma:migrate
+   docker-compose exec backend npm run prisma:seed
+
+3. Access the application:
+   - Frontend: http://localhost:5173
+   - Backend: http://localhost:3000
+
+To stop all services:
+    docker-compose down
+
+To remove all data (including database):
+    docker-compose down -v
+
+
+================================================================================
+                        VERIFICATION & TESTING
+================================================================================
+
+1. Verify Backend is Running:
+   
+   Open: http://localhost:3000/health
+   Should return: {"status":"ok"}
+
+2. Verify Frontend is Running:
+   
+   Open: http://localhost:5173
+   Should show the FoodMate login page
+
+3. Test Login:
+   - Use demo account: demo@foodmate.com / demo123
+   - Or register a new account
+
+4. Test Features:
+   - Browse catalog (should show food items with images)
+   - Add items to cart
+   - View cart
+   - Checkout (creates an order)
+   - View order history
+
+
+================================================================================
+                        TROUBLESHOOTING
+================================================================================
+
+Problem: "Cannot connect to database"
+Solution:
+- Verify PostgreSQL is running: docker-compose ps (if using Docker)
+- Check DATABASE_URL in app/backend/.env matches your setup
+- Ensure database exists: psql -U postgres -l (should list 'foodmate')
+
+Problem: "Port 3000 already in use"
+Solution:
+- Change PORT in app/backend/.env to another port (e.g., 3001)
+- Update VITE_API_URL in app/frontend/.env to match
+
+Problem: "Port 5173 already in use"
+Solution:
+- Vite will automatically use the next available port
+- Check terminal output for the actual port number
+
+Problem: "Prisma Client not generated"
+Solution:
+- Run: cd app/backend && npm run prisma:generate
+- Ensure you're in the backend directory
+
+Problem: "Migration failed"
+Solution:
+- Check database connection in .env
+- Ensure database exists
+- Try: npm run prisma:migrate reset (WARNING: deletes all data)
+
+Problem: "Seed script fails"
+Solution:
+- Check internet connection (seed script fetches from TheMealDB API)
+- Verify database is accessible
+- Check that migrations ran successfully
+
+Problem: "Frontend shows blank page"
+Solution:
+- Check browser console for errors (F12)
+- Verify VITE_API_URL in frontend/.env
+- Ensure backend is running on the correct port
+
+Problem: "CORS errors in browser"
+Solution:
+- Verify CORS_ORIGIN in backend/.env matches frontend URL
+- Default should be: http://localhost:5173
+
+
+================================================================================
+                        PROJECT STRUCTURE
+================================================================================
+
+FoodMate/
+├── app/
+│   ├── backend/              # Node.js + Express API
+│   │   ├── src/
+│   │   │   ├── index.ts      # Main server file
+│   │   │   ├── routes/       # API route handlers
+│   │   │   ├── services/     # Business logic
+│   │   │   ├── middleware/   # Auth, error handling
+│   │   │   └── utils/        # Prisma client, validation
+│   │   ├── prisma/
+│   │   │   ├── schema.prisma # Database schema
+│   │   │   └── seed.ts       # Database seeding script
+│   │   └── .env              # Backend environment variables
+│   │
+│   └── frontend/             # React + Vite application
+│       ├── src/
+│       │   ├── pages/        # Page components
+│       │   ├── components/   # Reusable components
+│       │   ├── api/          # API client functions
+│       │   ├── state/        # React context (auth)
+│       │   └── hooks/        # Custom React hooks
+│       └── .env              # Frontend environment variables
+│
+├── docker-compose.yml        # Docker configuration
+├── package.json              # Root package file
+└── README.md                 # Project documentation
+
+
+================================================================================
+                        USEFUL COMMANDS
+================================================================================
+
+From Project Root:
+------------------
+npm run install:all          # Install all dependencies
+npm run dev:all              # Start both servers
+
+From app/backend/:
+------------------
+npm run dev                  # Start backend server
+npm run build                # Build for production
+npm start                    # Run production build
+npm run prisma:generate      # Generate Prisma client
+npm run prisma:migrate       # Run database migrations
+npm run prisma:seed         # Seed database with data
+npm run prisma:studio        # Open Prisma Studio (database GUI)
+
+From app/frontend/:
+-------------------
+npm run dev                  # Start development server
+npm run build                # Build for production
+npm run preview              # Preview production build
+
+
+================================================================================
+                        ENVIRONMENT VARIABLES REFERENCE
+================================================================================
+
+Backend (.env):
+---------------
+DATABASE_URL          - PostgreSQL connection string
+                        Format: postgresql://user:password@host:port/database
+                        
+JWT_SECRET            - Secret key for JWT token signing
+                        Must be at least 32 characters long
+                        Generate: openssl rand -base64 32
+                        
+ADMIN_EMAIL           - Email address for admin user
+                        Used for admin-only endpoints
+                        
+CORS_ORIGIN           - Allowed origin for CORS
+                        Development: http://localhost:5173
+                        Production: Your frontend URL
+                        
+NODE_ENV              - Environment mode
+                        Development: development
+                        Production: production
+                        
+PORT                  - Backend server port
+                        Default: 3000
+
+
+Frontend (.env):
+----------------
+VITE_API_URL          - Backend API URL
+                        Development: http://localhost:3000
+                        Production: Your backend API URL
+
+
+================================================================================
+                        DATABASE INFORMATION
+================================================================================
+
+Default Database (Docker):
+--------------------------
+Host: localhost
+Port: 5432
+Database: foodmate
+User: foodmate_user
+Password: foodmate_password
+
+Connection String:
+postgresql://foodmate_user:foodmate_password@localhost:5432/foodmate?schema=public
+
+
+Demo User Account:
+------------------
+Email: demo@foodmate.com
+Password: demo123
+
+You can register new accounts through the registration page.
+
+
+================================================================================
+                        API ENDPOINTS
+================================================================================
+
+Public Endpoints:
+-----------------
+GET  /health                    - Health check
+POST /api/auth/register         - Register new user
+POST /api/auth/login            - Login user
+POST /api/auth/logout           - Logout user
+GET  /api/categories            - List all categories
+GET  /api/items                 - List items (with filters)
+GET  /api/items/:id             - Get item details
+
+Protected Endpoints (Require Authentication):
+---------------------------------------------
+GET  /api/auth/me               - Get current user
+GET  /api/cart                  - Get user's cart
+POST /api/cart/items            - Add item to cart
+PATCH /api/cart/items/:itemId   - Update cart item quantity
+DELETE /api/cart/items/:itemId - Remove item from cart
+POST /api/checkout              - Process checkout
+GET  /api/orders                - List user's orders
+GET  /api/orders/:id            - Get order details
+
+Admin Endpoints (Require Admin Email):
+--------------------------------------
+POST /api/admin/orders/:id/deliver - Mark order as delivered
+POST /api/admin/items/:id/restock  - Restock an item
+
+
+================================================================================
+                        QUICK START CHECKLIST
+================================================================================
+
+[ ] Node.js 20+ installed
+[ ] PostgreSQL running (or Docker installed)
+[ ] Dependencies installed (npm run install:all)
+[ ] Backend .env file created and configured
+[ ] Frontend .env file created and configured
+[ ] Database migrations run (npm run prisma:migrate)
+[ ] Database seeded (npm run prisma:seed)
+[ ] Backend server running (npm run dev)
+[ ] Frontend server running (npm run dev)
+[ ] Application accessible at http://localhost:5173
+[ ] Can login with demo@foodmate.com / demo123
+
+
+================================================================================
+                        SUPPORT & RESOURCES
+================================================================================
+
+Documentation:
+- README.md - Full project documentation
+- QUICKSTART.md - Quick reference guide
+- docs/api_collection.json - Postman/Insomnia API collection
+
+Technologies Used:
+- React: https://react.dev/
+- Express: https://expressjs.com/
+- Prisma: https://www.prisma.io/docs
+- PostgreSQL: https://www.postgresql.org/docs/
+- Tailwind CSS: https://tailwindcss.com/docs
+
+External APIs:
+- TheMealDB: https://www.themealdb.com/api.php (used for food data)
+
+
+================================================================================
+                        PRODUCTION DEPLOYMENT NOTES
+================================================================================
+
+Before deploying to production:
+
+1. Change JWT_SECRET to a strong random value
+2. Set NODE_ENV=production
+3. Update CORS_ORIGIN to your production frontend URL
+4. Use a managed PostgreSQL database (not local)
+5. Run migrations: npm run prisma:migrate deploy
+6. Build frontend: cd app/frontend && npm run build
+7. Build backend: cd app/backend && npm run build
+8. Set up environment variables on your hosting platform
+9. Configure proper error logging and monitoring
+
+Recommended Platforms:
+- Frontend: Vercel, Netlify
+- Backend: Render, Railway, Heroku
+- Database: Render PostgreSQL, Railway PostgreSQL, Supabase
+
+
+================================================================================
+                        END OF SETUP GUIDE
+================================================================================
+
+If you encounter any issues not covered here, check:
+1. Browser console for frontend errors
+2. Terminal output for backend errors
+3. README.md for additional information
+4. Database connection and environment variables
+
+Happy coding! 🍽️
+

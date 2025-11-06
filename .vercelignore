@@ -1,0 +1,11 @@
+node_modules
+app/backend/node_modules
+app/frontend/node_modules
+app/backend/dist
+*.log
+.env
+.env.local
+docker-compose.yml
+Dockerfile
+docs
+

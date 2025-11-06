@@ -1,4 +1,7 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+// Use relative URLs for Vercel deployment, or absolute URL for local development
+const API_URL = import.meta.env.VITE_API_URL || (
+  import.meta.env.PROD ? '' : 'http://localhost:3000'
+);
 
 export const apiClient = async (
   endpoint: string,
